@@ -56,6 +56,7 @@ streamlit run app.py
 ```
 6. You also need a gemini-api key which you can get from [here](https://ai.google.dev/).
 7. Note that initial execution may take some time to create document embeddings and parse various document types, but subsequent runs will be faster.
+8. Important Note: [click here](https://github.com/Adiii1436/datadoc/issues/1#issuecomment-2011808810)
    
 ## Contributing 🤝
 
