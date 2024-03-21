@@ -55,7 +55,8 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 6. You also need a gemini-api key which you can get from [here](https://ai.google.dev/).
-
+7. Note that initial execution may take some time to create document embeddings and parse various document types, but subsequent runs will be faster.
+   
 ## Contributing 🤝
 
 We welcome contributions from developers. Feel free to fork this repository, make changes, and submit a pull request.
