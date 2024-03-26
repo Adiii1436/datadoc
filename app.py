@@ -15,7 +15,15 @@ def save_uploaded_file(uploaded_file):
         return None
 
 st.set_page_config(page_title="Datadoc", page_icon=":robot:", layout="wide", initial_sidebar_state="expanded")
-st.title("Datadoc: Your AI DOC Assistant")
+
+col1, col2 = st.columns([6,1])
+with col1:
+    st.title("Datadoc: Your AI DOC Assistant")
+
+with col2:
+    vert_space = '<div style="padding: 20px;"></div>'
+    st.markdown(vert_space, unsafe_allow_html=True)
+    offline_mode = st.toggle("Offline Mode", key='offline_toggle')
 
 if 'generated' not in st.session_state:
     st.session_state['generated'] = []
@@ -23,24 +31,46 @@ if 'past' not in st.session_state:
     st.session_state['past'] = []
 
 st.sidebar.title("Options")
-model_name = st.sidebar.radio("Choose a model:", ("Gemini Pro", "Gemini Pro Vision"))
-api_key = st.text_input("Enter your API key:", type="password")
+
+if(offline_mode):
+    model_name = st.sidebar.radio("Choose a model:", ("GPT4All offline",))
+else:
+    model_name = st.sidebar.radio("Choose a model:", ("Gemini Pro", "Gemini Pro Vision"))
+
+if not offline_mode:
+    api_key = st.text_input("Enter your API key:", type="password")
+
 clear_button = st.sidebar.button("Clear Conversation", key="clear")
 
-if model_name == "Gemini Pro":
+if not offline_mode and model_name == "Gemini Pro":
     model = "gemini-pro"
-else:
+elif not offline_mode and model_name == "Gemini Pro Vision":
     model = "gemini-pro-vision"
+else:
+    model = "GPT4All"
 
 if clear_button:
     st.session_state['generated'] = []
     st.session_state['past'] = []
 
 def generate_response(prompt, model, image_path=None, explain_to_kid=False):
-    st.session_state['past'].append(prompt)
-    response = get_llm_response(prompt, model, image_path, api_key, explain_to_kid)
-    st.session_state['generated'].append(response)
+    if len(st.session_state['past']) == len(st.session_state['generated']):
+        st.session_state['past'].append(prompt)
+    else:
+        st.session_state['past'][-1] = prompt
+
+    if not offline_mode:
+        response = get_llm_response(prompt, model, image_path, api_key, explain_to_kid)
+    else:
+        response = get_llm_response(prompt, model, image_path, explain_to_kid, offline=True)
+
+    if len(st.session_state['generated']) < len(st.session_state['past']):
+        st.session_state['generated'].append(response)
+    else:
+        st.session_state['generated'][-1] = response
+
     return response
+
 
 # container for chat history
 response_container = st.container()
@@ -63,9 +93,9 @@ with container:
         with col2:
             explain_kid = st.toggle("Child Mode", key='explain_toggle')
         
-    if submit_button and not api_key:
+    if not offline_mode and submit_button and not api_key:
         st.warning("Please enter your API key.")
-    elif submit_button and not uploaded_file and model_name == "Gemini Pro Vision":
+    elif not offline_mode and submit_button and not uploaded_file and model_name == "Gemini Pro Vision":
         st.warning("Please upload an image to use the Image Model.")
     elif uploaded_file:
         image_path = save_uploaded_file(uploaded_file)

@@ -10,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 import os
 from load_model import load_image_llm,load_text_llm
 
-def get_result(vectordb,query,model,image_path=None,chat_history=[],explain_to_kid=False):
+def get_result(vectordb,query,model,image_path=None,chat_history=[],explain_to_kid=False,is_offline=False):
     
     if(model=="gemini-pro-vision"):
         
@@ -28,7 +28,7 @@ def get_result(vectordb,query,model,image_path=None,chat_history=[],explain_to_k
         # save_string_to_txt(content)
         return content,chat_history
     else:
-        text_llm = load_text_llm()
+        text_llm = load_text_llm(is_offline)
 
         retriever = vectordb.as_retriever()
 
@@ -91,12 +91,10 @@ def get_result(vectordb,query,model,image_path=None,chat_history=[],explain_to_k
             | text_llm
         )
 
-        # if(query.find("summary")!=-1 or query.find("Summary")!=-1 or query.find("summarize")!=-1 or query.find("Summarize")!=-1) :
-        #     summarize_chain = load_summarize_chain(text_llm,chain_type="stuff")
-        #     search = vectordb.similarity_search(" ")
-        #     summary = summarize_chain.invoke(input=search, question="Write a summary within 300 words.")
-        #     return summary['output_text']
-        # else:
         res = rag_chain.invoke({"question": query, "chat_history": chat_history})
         chat_history.extend([HumanMessage(content=query), res])
-        return res.content,chat_history
+        
+        if not is_offline:
+            return res.content, chat_history
+        else:
+            return res, chat_history
