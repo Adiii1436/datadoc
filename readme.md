@@ -15,6 +15,9 @@ Welcome to Datadoc, your personal AI document assistant. Datadoc is designed to 
     ![Screenshot from 2024-03-18 20-09-18](https://github.com/Adiii1436/datadoc/assets/73269919/4d7367e9-6b6e-402e-859c-ed926f8d68e8)
 
 - **Offline Support**: Datadoc supports offline mode i.e now you can the LLM model locally on your system. And you also don't need GPU for this. If you prefer to run LLM locally you can use this feature.
+
+   ![image](https://github.com/Adiii1436/datadoc/assets/73269919/60ba0650-ac24-4877-baf5-a399b1c8df7a)
+
    - Download the Model: Download **mistral-7b-openorca.gguf2.Q4_0.gguf** model from the **Model Explorer** section in GPT4All [website](https://gpt4all.io/index.html).
    - Place the model inside `models/mistral-7b-openorca.gguf2.Q4_0.gguf`.
 
