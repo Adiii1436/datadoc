@@ -7,7 +7,7 @@ def load_image_llm():
 
 def load_text_llm(offline=False):
     if not offline:
-        llm = ChatGoogleGenerativeAI(model="gemini-pro",convert_system_message_to_human=True)
+        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash",convert_system_message_to_human=True)
     else:
         llm = GPT4All(model="models/mistral-7b-openorca.gguf2.Q4_0.gguf", n_threads=8)
     
