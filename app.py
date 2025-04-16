@@ -109,4 +109,4 @@ if st.session_state['generated']:
         for i in range(len(st.session_state['generated'])):
             st.markdown(f"**You:** {st.session_state['past'][i]}")
             with st.container(border=True):
-                st.markdown(f"{st.session_state['generated'][i]}")
+                st.markdown(f"{st.session_state['generated'][i]}")    
